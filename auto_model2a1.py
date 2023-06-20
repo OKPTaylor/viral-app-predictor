@@ -169,7 +169,7 @@ def auto_random_trees(x_train, y_train, x_validate, y_validate, max_depth=range(
     for x in max_depth:
         
         #make it
-        rf = RandomForestClassifier(random_state=123, max_depth=x) #increases the sample leaf whild decreasing max depth
+        rf = RandomForestClassifier(random_state=123, max_depth=x) #increases the k number
         #fit it
         rf.fit(x_train, y_train)
         #transform it
@@ -199,13 +199,13 @@ def auto_random_trees(x_train, y_train, x_validate, y_validate, max_depth=range(
 
         scores_all.append([x, train_acc, val_acc])
 
-def auto_lo_regress(x_train, y_train, x_validate, y_validate, max_depth=range(5,20)):
+def auto_lo_regress(x_train, y_train, x_validate, y_validate, c_range=range(1,10)):
         scores_all = []
 
-        for x in max_depth:
+        for x in c_range:
         
         #make it
-            logit = LogisticRegression() #increases the sample leaf whild decreasing max depth
+            logit = LogisticRegression(c=x) 
                 #fit it
             logit.fit(x_train, y_train)
                 #transform it
@@ -353,13 +353,13 @@ def auto_random_forest_scores(x_train, y_train, x_validate, y_validate, max_dept
     print(df_scores.sort_values(by='delta', ascending=False))
 
 #This function runs through a range of max_depth values and returns the accuracy scores for each max_depth value for logistic regression
-def auto_lo_regress_scores(x_train, y_train, x_validate, y_validate, max_depth=range(5,20)):
+def auto_lo_regress_scores(x_train, y_train, x_validate, y_validate, c_range=np.arange(0.1,1, 0.1)):
         scores_all = []
 
-        for x in max_depth:
+        for x in c_range:
         
         #make it
-            logit = LogisticRegression() #increases the sample leaf whild decreasing max depth
+            logit = LogisticRegression(C=x) 
                 #fit it
             logit.fit(x_train, y_train)
                 #transform it
@@ -378,7 +378,7 @@ def auto_lo_regress_scores(x_train, y_train, x_validate, y_validate, max_depth=r
         #create a dataframe from the scores_all list of lists
         df_scores = pd.DataFrame(scores_all)
         # add column names to the dataframe
-        df_scores.columns = ['max_depth', 'train_accuracy', 'validate_accuracy']
+        df_scores.columns = ['c_range', 'train_accuracy', 'validate_accuracy']
         # sort the dataframe by the difference between train and validate
         df_scores['delta'] = df_scores.train_accuracy - df_scores.validate_accuracy
         print(df_scores.sort_values(by='delta', ascending=False))        
@@ -442,8 +442,8 @@ def auto_random_trees_test_with_entropy(x_test, y_test, x_train, y_train):
     #plots the predicted viral apps against the actual viral apps
     plt.figure(figsize=(16,8))
 
-    plt.hist(y_train, color='blue', alpha=.5, label="Actual App Viral")
-    plt.hist(y_pred_train, color='red', alpha=.5, label="Model: Random Forest")
+    plt.hist(y_test, color='blue', alpha=.5, label="Actual App Viral")
+    plt.hist(y_pred, color='red', alpha=.5, label="Model: Random Forest")
        #plt.hist(y_validate.G3_pred_lars, color='purple', alpha=.5, label="Model: Lasso Lars")
         #plt.hist(y_validate.G3_pred_glm, color='yellow', alpha=.5, label="Model: TweedieRegressor")
         #plt.hist(y_validate.G3_pred_lm2, color='green', alpha=.5, label="Model 2nd degree Polynomial")
@@ -526,8 +526,8 @@ def random_forest_voting_classifier_test(X_train, y_train, X_test, y_test):
     #plots the predicted viral apps against the actual viral apps
     plt.figure(figsize=(16,8))
 
-    plt.hist(y_train, color='blue', alpha=.5, label="Actual App Viral")
-    plt.hist(y_pred, color='red', alpha=.5, label="Model: Random Forest")
+    plt.hist(y_test, color='blue', alpha=.5, label="Actual App Viral")
+    plt.hist(y_vpred, color='red', alpha=.5, label="Model: Random Forest")
        #plt.hist(y_validate.G3_pred_lars, color='purple', alpha=.5, label="Model: Lasso Lars")
         #plt.hist(y_validate.G3_pred_glm, color='yellow', alpha=.5, label="Model: TweedieRegressor")
         #plt.hist(y_validate.G3_pred_lm2, color='green', alpha=.5, label="Model 2nd degree Polynomial")
